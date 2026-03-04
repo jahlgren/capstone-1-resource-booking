@@ -10,7 +10,10 @@ export default defineConfig({
     "./src/features/auth/models/account.ts",
     "./src/features/auth/models/session.ts",
     "./src/features/auth/models/verification.ts",
-    
+    /* RESOURCE MODELS */
+    "./src/features/resource/model/resource.ts",
+    /* BOOKING MODELS */
+    "./src/features/booking/model/booking.ts",
   ],
   dialect: 'postgresql',
   dbCredentials: {
