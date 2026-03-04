@@ -22,6 +22,6 @@ export default function LogoutButton() {
   }
 
   return (
-      <Button onClick={logout}>Logout</Button>
+      <Button className='max-w-sm' variant="outline" onClick={logout}>Logout</Button>
   )
 }

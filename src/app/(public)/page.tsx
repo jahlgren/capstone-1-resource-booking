@@ -13,10 +13,10 @@ export default async function IndexPage() {
 
   if(session?.user) {
     return (
-      <div>
+      <div className="flex flex-col gap-4">
         Hello {session.user.name}<br />
         <ResourceScreen />
-        <LogoutButton />
+        <LogoutButton  />
       </div>
     )
   }

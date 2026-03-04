@@ -71,3 +71,7 @@ Available routes:
 
 * / → Index page
 * /login → Login page
+* GET → /api/resource - Getting all resources
+* POST → /api/resource - Create a new resource
+* GET → /api/booking - Getting all bookings
+* POST → /api/booking - Create a new booking
