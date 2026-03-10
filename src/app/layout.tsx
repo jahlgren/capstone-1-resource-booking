@@ -4,6 +4,8 @@ import "./globals.css";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/shared/components/layout/navbar";
+import { headers } from "next/headers";
+import { auth } from "@/features/auth/server/auth-server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +27,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  
   return (
     <html lang="en">
       <body
@@ -32,7 +38,7 @@ export default async function RootLayout({
       >
         <Providers>
           <div className="flex flex-col h-screen overflow-hidden">
-            <Navbar />
+            {session?.user && <Navbar />}
             <main className="flex-1 overflow-y-auto">
               {children}
             </main>

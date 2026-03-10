@@ -17,6 +17,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
+import LogoutButton from "@/features/auth/components/logout-button";
 
 const Navbar = () => {
     const pathname = usePathname();
@@ -29,24 +30,24 @@ const Navbar = () => {
 
     return (
         <div className="flex items-center justify-between px-8 h-25 bg-white border-b border-transparent">
-            <div className="flex items-center gap-3 ">
-                <Image
-                    src="/assets/logo.png"
-                    alt="Logo"
-                    width={70}
-                    height={70}
-                    priority
-                />
+                <Link href="/" className="flex items-center gap-3 ">
+                    <Image
+                        src="/assets/logo.png"
+                        alt="Logo"
+                        width={70}
+                        height={70}
+                        priority
+                    />
 
-                <div className="flex">
-                    <h1 className="text-[#1980D5] font-bold text-2xl">
-                        Order
-                    </h1>
-                    <h1 className="text-[#63BE57] font-bold text-2xl">
-                        Ease
-                    </h1>
-                </div>
-            </div>
+                    <div className="flex">
+                        <h1 className="text-[#1980D5] font-bold text-2xl">
+                            Order
+                        </h1>
+                        <h1 className="text-[#63BE57] font-bold text-2xl">
+                            Ease
+                        </h1>
+                    </div>
+                </Link>
 
             <div className="flex gap-10 h-full">
                 {navlinks.map((link) => {
@@ -92,9 +93,7 @@ const Navbar = () => {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem variant="destructive">
-                                Log out
-                            </DropdownMenuItem>
+                            <LogoutButton />
                         </DropdownMenuGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>

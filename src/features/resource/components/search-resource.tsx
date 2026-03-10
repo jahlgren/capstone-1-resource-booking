@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import { Input } from "@/shared/components/ui/input";
 import { cn } from "@/shared/lib/utils";
 import { IconSearch } from "@tabler/icons-react";
@@ -9,6 +11,11 @@ export default function SearchResource() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
+    const [value, setValue] = useState(searchParams.get("query") ?? "");
+
+    useEffect(() => {
+        setValue(searchParams.get("query") ?? "");
+    }, [searchParams]);
 
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams);
@@ -25,8 +32,11 @@ export default function SearchResource() {
         <div className="relative w-full max-w-lg">
             <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10" />
             <Input
-                onChange={(e) => handleSearch(e.target.value)}
-                defaultValue={searchParams.get("query")?.toString()}
+                onChange={(e) => {
+                    setValue(e.target.value);
+                    handleSearch(e.target.value);
+                }}
+                value={value}
                 placeholder="Search"
                 className={cn(
                     "h-14 pl-12 text-xl md:text-xl",

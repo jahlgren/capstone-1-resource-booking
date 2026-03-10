@@ -15,8 +15,6 @@ export default async function IndexPage() {
     return (
       <div className="flex flex-col gap-4">
         Hello {session.user.name}<br />
-        <ResourceScreen />
-        <LogoutButton  />
       </div>
     )
   }

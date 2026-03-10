@@ -1,27 +1,33 @@
-"use client"
-
-import { Button } from "@/shared/components/ui/button"
-import {signOut} from '@/features/auth/client/auth-client'
-import { useRouter } from "next/navigation"
+"use client";
+import { signOut } from "@/features/auth/client/auth-client";
+import { useRouter } from "next/navigation";
+import { DropdownMenuItem } from "@/shared/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
 
 // Event handlers need to run on the client..
 // The line above tells Next.js that this component needs to run client side.
 
 export default function LogoutButton() {
-
-  const router = useRouter()
+  const router = useRouter();
 
   const logout = async () => {
     await signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/login"); // redirect to login page
+          window.location.href = "/login";
         },
       },
     });
-  }
+  };
 
   return (
-      <Button className='max-w-sm' variant="outline" onClick={logout}>Logout</Button>
-  )
+    <DropdownMenuItem
+      variant="destructive"
+      onClick={logout}
+      className="cursor-pointer w-full flex items-center gap-2"
+    >
+      <LogOut size={4} />
+      <span>Log out</span>
+    </DropdownMenuItem>
+  );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Resource } from "../types/resource";
 import { Button } from "@/shared/components/ui/button";
@@ -10,8 +12,16 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { IconSearchOff } from "@tabler/icons-react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function ListResource({ resources }: { resources: Resource[] }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleResetFilters = () => {
+    router.replace(pathname);
+  }
+
   return (
     <>
       {resources && resources.length > 0
@@ -63,7 +73,7 @@ export default function ListResource({ resources }: { resources: Resource[] }) {
             </p>
             <Button
               variant="outline"
-              onClick={() => window.location.reload()} // Or a function to reset filters
+              onClick={handleResetFilters} // Or a function to reset filters
               className="h-12 px-6"
             >
               Clear all filters
