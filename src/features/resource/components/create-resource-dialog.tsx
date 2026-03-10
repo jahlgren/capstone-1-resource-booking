@@ -11,6 +11,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,16 +36,20 @@ export default function createResourceDialog(
   const hasSingleElementChild = React.isValidElement(children);
   const form = useForm<CreateResourceInput>({
     resolver: zodResolver(createRoesourceSchema),
-    defaultValues: { name: "", description: "", userId: "123", Image: "" },
+    defaultValues: { name: "", description: "", userId: "123", Image: undefined },
   });
   const onSubmit = async (values: CreateResourceInput) => {
     try {
-      await mutateAsync({
-        name: values.name,
-        description: values.description,
-        userId: "123", // TODO: get user id from auth context
-        Image: values.Image
-      });
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description ?? "");
+      formData.append("userId", "123"); // TODO: get user id from auth context
+      if (values.Image instanceof File) {
+        formData.append("image", values.Image);
+      }
+
+      await mutateAsync(formData);
+
       form.reset();
       setOpen(false);
     } catch (e) {
@@ -79,7 +84,7 @@ export default function createResourceDialog(
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Meeting" {...field} />
+                    <Input placeholder="e.g. MacBook Pro M3 #04" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,9 +95,9 @@ export default function createResourceDialog(
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discription</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="this is a hotel.." {...field} />
+                    <Input placeholder="e.g. 16-inch model, 32GB RAM, includes charger..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,12 +106,20 @@ export default function createResourceDialog(
             <FormField
               control={form.control}
               name="Image"
-              render={({ field }) => (
+              render={({ field: { value, onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="Add url for image" {...field} />
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      {...field}
+                      onChange={(e) => onChange(e.target.files?.[0])}
+                    />
                   </FormControl>
+                  <FormDescription>
+                    The image is optional
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

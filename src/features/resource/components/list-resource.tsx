@@ -11,20 +11,28 @@ import {
 } from "@/shared/components/ui/card";
 import { IconSearchOff } from "@tabler/icons-react";
 
-export default function ListResource({ resource }: { resource: Resource[] }) {
+export default function ListResource({ resources }: { resources: Resource[] }) {
   return (
     <>
-      {resource && resource.length > 0
+      {resources && resources.length > 0
         ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {resource.map((res: any) => (
-              <Card className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-between">
+            {resources.map((res: Resource) => (
+              <Card key={res.id} className="relative w-full max-w-sm pt-0 overflow-hidden">
                 <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
-                <img
-                  src="https://avatar.vercel.sh/shadcn1"
-                  alt="Event cover"
-                  className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
-                />
+                {res.image
+                  ? (
+                    <img
+                      src={res.image}
+                      alt={res.name}
+                      className="relative z-20 aspect-video w-full object-cover brightness-100 dark:brightness-60"
+                    />
+                  )
+                  : (
+                    <div className="relative z-20 flex aspect-video w-full items-center justify-center bg-muted text-muted-foreground">
+                      <span className="text-sm">No image found</span>
+                    </div>
+                  )}
                 <CardHeader>
                   <CardAction>
                   </CardAction>

@@ -3,6 +3,7 @@ export type Resource = {
     userId: string;
     name: string;
     description?: string;
+    image?: string;
     createdAt: Date;
     updatedAt: Date;
 }

@@ -1,9 +1,9 @@
 import db from "@/db";
-import { CreateResourceInput } from "../validation/create-resource-validator";
+import { CreateResourceServerInput } from "../validation/create-resource-validator";
 import { resource } from "../model/resource";
 import { createId } from "@paralleldrive/cuid2";
 
-export async function createResource(input: CreateResourceInput) {
+export async function createResource(input: CreateResourceServerInput) {
     const data = await db.insert(resource).values({
         id: createId(),
         userId: input.userId,
