@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { auth } from "@/features/auth/server/auth-server";
-import LogoutButton from "@/features/auth/components/logout-button";
-import ResourceScreen from "@/features/resource/screens/resource-screen";
+import LandingScreen from "@/features/landing/screens/landing-screen";
 
 export default async function IndexPage() {
   // This page is server rendererd.
@@ -21,7 +20,7 @@ export default async function IndexPage() {
 
   return (
     <div>
-      Index page
+      <LandingScreen />
     </div>
   )
 }

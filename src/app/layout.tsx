@@ -37,9 +37,9 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <div className="flex flex-col h-screen overflow-hidden">
+          <div className="flex flex-col">
             {session?.user && <Navbar />}
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1">
               {children}
             </main>
             <Toaster />

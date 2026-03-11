@@ -181,3 +181,20 @@
    --chart-4:  hsl(280 65% 60%);
    --chart-5:  hsl(340 75% 55%);
  }
+
+ @layer base {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1980d5; /* Your OrderEase Blue */
+    border-radius: 10px;
+    border: 3px solid #f8fafc; /* Match your bg-slate-50 */
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1181c4;
+  }
+}

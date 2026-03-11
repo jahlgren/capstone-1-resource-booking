@@ -24,7 +24,7 @@ export default function FilterResource() {
                         className={cn(
                             "h-14 text-xl px-8",
                             "w-full sm:w-32 md:w-40 lg:w-48",
-                            "transition-all duration-200 shadow-sm bg-white"
+                            "transition-all duration-200 shadow-sm bg-white ccursor-pointer"
                         )}
                     >
                         Filter

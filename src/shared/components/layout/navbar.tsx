@@ -30,25 +30,27 @@ const Navbar = () => {
 
     return (
         <div className="flex items-center justify-between px-8 h-25 bg-white border-b border-transparent">
-                <Link href="/" className="flex items-center gap-3 ">
-                    <Image
-                        src="/assets/logo.png"
-                        alt="Logo"
-                        width={70}
-                        height={70}
-                        priority
-                    />
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 ">
+                <Image
+                    src="/assets/logo.png"
+                    alt="Logo"
+                    width={70}
+                    height={70}
+                    priority
+                />
 
-                    <div className="flex">
-                        <h1 className="text-[#1980D5] font-bold text-2xl">
-                            Order
-                        </h1>
-                        <h1 className="text-[#63BE57] font-bold text-2xl">
-                            Ease
-                        </h1>
-                    </div>
-                </Link>
+                <div className="flex">
+                    <h1 className="text-[#1980D5] font-bold text-2xl">
+                        Order
+                    </h1>
+                    <h1 className="text-[#63BE57] font-bold text-2xl">
+                        Ease
+                    </h1>
+                </div>
+            </Link>
 
+            {/* Pages */}
             <div className="flex gap-10 h-full">
                 {navlinks.map((link) => {
                     const isActive = pathname === link.href;
@@ -72,6 +74,7 @@ const Navbar = () => {
                 })}
             </div>
 
+            {/* Avatar */}
             <div className="">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/features/auth/server/auth-server";
-import ResourceScreen from "@/features/resource/screens/resource-screen";
 
 export default async function BookingsPage() {
 
