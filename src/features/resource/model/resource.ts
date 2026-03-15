@@ -11,7 +11,7 @@ export const resource = pgTable("resource", {
     image: text("image"),
     price: real("price").default(0).notNull(),
     priceUnit: priceUnitEnum("price_unit").default("hour").notNull(),
-    category: resourceTypeEnum("type").default("Appartments & Spaces").notNull(),
+    category: resourceTypeEnum("resource_type").default("Appartments & Spaces").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
