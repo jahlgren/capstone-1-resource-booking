@@ -4,6 +4,8 @@ export type Resource = {
     name: string;
     description: string | null;
     image?: string | null;
+    priceUnits: number;
+    category: string;
     createdAt: Date;
     updatedAt: Date;
 }
