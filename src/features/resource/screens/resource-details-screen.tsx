@@ -12,7 +12,7 @@ export default function ResourceDetailsScreen(
             <div className="mb-6">
                 <ResourceBreadcrumb resource={resource} />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-10 gap-10 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-10 gap-10 items-center">
                 <div className="lg:col-span-4">
                     <ResourceImage src={resource.image} alt={resource.name} />
                 </div>

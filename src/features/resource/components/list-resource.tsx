@@ -6,6 +6,7 @@ import { Button } from "@/shared/components/ui/button";
 import {
   Card,
   CardAction,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -14,6 +15,7 @@ import {
 import { IconSearchOff } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { DollarSign } from "lucide-react";
 
 export default function ListResource({ resources }: { resources: Resource[] }) {
   const router = useRouter();
@@ -24,42 +26,61 @@ export default function ListResource({ resources }: { resources: Resource[] }) {
   };
 
   return (
-    <>
+    <div>
       {resources && resources.length > 0
         ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center max-w-7xl mx-auto">
             {resources.map((res: Resource) => (
               <Card
                 key={res.id}
-                className="relative w-full max-w-sm pt-0 overflow-hidden"
+                className="relative pt-0 overflow-hidden"
               >
-                <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
-                {res.image
-                  ? (
-                    <img
-                      src={res.image}
-                      alt={res.name}
-                      className="relative z-20 aspect-video w-full object-cover brightness-100 dark:brightness-60"
-                    />
-                  )
-                  : (
-                    <div className="relative z-20 flex aspect-video w-full items-center justify-center bg-muted text-muted-foreground">
-                      <span className="text-sm">No image found</span>
-                    </div>
-                  )}
+                <div className="absolute inset-0 aspect-video" />
+                <img
+                  src={res.image || "/assets/placeholder-resource.svg"}
+                  alt={res.name}
+                  className="relative z-20 aspect-video w-full object-cover brightness-100 dark:brightness-60"
+                />
                 <CardHeader>
-                  <CardAction>
-                  </CardAction>
-                  <CardTitle>{res.name}</CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-[10px] text-gb-blue font-bold tracking-widest uppercase">
+                    {res.category}
+                  </CardDescription>
+                  <CardTitle className="text-xl font-bold text-slate-900 line-clamp-1">
+                    {res.name}
+                  </CardTitle>
+                  <CardDescription className="text-sm line-clamp-2 min-h-[40px]">
                     {res.description}
                   </CardDescription>
+                  <div className="flex items-center justify-between pt-2">
+                    <div className="flex items-baseline">
+                      <span className="font-bold text-sm text-slate-900 mr-0.5">
+                        $
+                      </span>
+                      <span className="text-2xl font-black text-slate-900 tracking-tight">
+                        {res.price}
+                      </span>
+                      <span className="ml-1.5 text-sm font-medium text-slate-500 lowercase italic">
+                        per {res.priceUnit}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 rounded-full border border-green-100">
+                      <div className="size-1.5 bg-green-500 rounded-full" />
+                      <span className="text-[10px] font-bold text-green-600 uppercase">
+                        Ready
+                      </span>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardFooter className="flex items-center justify-evenly gap-3">
                   <Link href={`/resources/${res.id}`}>
-                    <Button className="flex-1 rounded-xl hover:-translate-y-1 transition-all duration-300">View Details</Button>
+                    <Button className="flex-1 rounded-xl hover:-translate-y-1 transition-all duration-300">
+                      View Details
+                    </Button>
                   </Link>
-                  <Button className="flex-1 rounded-xl hover:-translate-y-1 transition-all duration-300">Book</Button>
+                  <Button className="flex-1 rounded-xl hover:-translate-y-1 transition-all duration-300">
+                    Book Now
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
@@ -86,6 +107,6 @@ export default function ListResource({ resources }: { resources: Resource[] }) {
             </Button>
           </div>
         )}
-    </>
+    </div>
   );
 }

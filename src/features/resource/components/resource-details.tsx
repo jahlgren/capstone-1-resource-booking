@@ -38,7 +38,7 @@ export default function ResourceDetails({ resource }: { resource: Resource }) {
                                 Category
                             </p>
                             <p className="text-lg font-semibold text-slate-800">
-                                General Resource
+                                {resource.category}
                             </p>
                         </div>
                     </div>
@@ -61,10 +61,10 @@ export default function ResourceDetails({ resource }: { resource: Resource }) {
                         </div>
                         <div>
                             <p className="text-xs font-bold uppercase tracking-widest opacity-80">
-                                Rate per day
+                                Rate per {resource.priceUnit}
                             </p>
                             <p className="text-3xl font-black tracking-tight">
-                                $123.00
+                                ${resource.price}
                             </p>
                         </div>
                     </div>

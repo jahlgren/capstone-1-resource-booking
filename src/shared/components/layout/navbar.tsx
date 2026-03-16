@@ -29,9 +29,9 @@ const Navbar = () => {
     ];
 
     return (
-        <div className="flex items-center justify-between px-8 h-25 bg-white border-b border-transparent">
+        <div className="flex items-center justify-between px-4 sm:px-8 h-25 bg-white border-b border-transparent">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 ">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 ">
                 <Image
                     src="/assets/logo.png"
                     alt="Logo"
@@ -41,17 +41,17 @@ const Navbar = () => {
                 />
 
                 <div className="flex">
-                    <h1 className="text-[#1980D5] font-bold text-2xl">
+                    <h1 className="text-[#1980D5] font-bold text-xl sm:text-2xl">
                         Order
                     </h1>
-                    <h1 className="text-[#63BE57] font-bold text-2xl">
+                    <h1 className="text-[#63BE57] font-bold text-xl sm:text-2xl">
                         Ease
                     </h1>
                 </div>
             </Link>
 
             {/* Pages */}
-            <div className="flex gap-10 h-full">
+            <div className="hidden sm:flex gap-6 md:gap-10 h-full">
                 {navlinks.map((link) => {
                     const isActive = pathname === link.href;
                     return (

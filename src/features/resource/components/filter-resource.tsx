@@ -33,7 +33,7 @@ export default function FilterResource() {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                    className="w-56 rounded-2xl p-2 shadow-2xl border-white/20 bg-white/90 backdrop-blur-md"
+                    className="w-[var(--radix-dropdown-menu-trigger-width)] rounded-2xl p-2 shadow-2xl border-white/20 bg-white/70 backdrop-blur-md"
                     align="end"
                 >
                     <DropdownMenuGroup>
