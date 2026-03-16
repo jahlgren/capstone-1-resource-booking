@@ -4,11 +4,15 @@ export type Resource = {
     name: string;
     description: string | null;
     image?: string | null;
-    priceUnits: number;
-    category: string;
+    price: number;
+    priceUnit: priceUnit;
+    category: category;
     createdAt: Date;
     updatedAt: Date;
 }
+
+type category = "Apartments & Spaces" | "Vehicles & Transport" | "Tools & Equipment" | "Office & Tech";
+type priceUnit = "hour" | "day" | "week" | "month";
 
 export type ResourceDetailsPageprops = {
     params: Promise<{ resourceId: string}>;
