@@ -11,17 +11,13 @@ import SkeletonCard from "../components/skeleton-card";
 import { cn } from "@/shared/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { Resource } from "../types/resource";
+import CategoryFilter from "../components/category-filter";
+import useResourceFilter from "../hooks/use-resource-filter";
 
 export default function resourceScreen() {
   const { data: resources, isPending } = useResourcesQuery();
 
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query")?.toString() ?? "";
-  const filteredResources =
-    resources?.filter((resource: Resource) =>
-      resource.name.toLocaleLowerCase().includes(query) ||
-      (resource.description?.toLocaleLowerCase().includes(query) ?? false)
-    ) ?? [];
+  const { filteredResources } = useResourceFilter(resources)
 
   return (
     <div className="flex-1 py-6 mx-10">
@@ -64,6 +60,8 @@ export default function resourceScreen() {
             <FilterResource />
           </div>
         </div>
+
+        <CategoryFilter />
 
         <div className="">
           {isPending
