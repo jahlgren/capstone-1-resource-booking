@@ -80,3 +80,6 @@ Available routes:
 * GET → /api/resource/[id] - Get resource by id
 * PUT → /api/resource/[id] - Update resource by id  
 * DELETE → /api/resource/[id] - Delete resource by id
+* GET → /api/favorites - Get all favorites for the user
+* POST → /api/favorites - Create a new favorite, with body { resourceId: string }, works as a toggle, if the favorite already exists it will be deleted
+
