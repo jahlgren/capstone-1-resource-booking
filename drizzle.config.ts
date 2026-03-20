@@ -14,6 +14,8 @@ export default defineConfig({
     "./src/features/resource/model/resource.ts",
     /* BOOKING MODELS */
     "./src/features/booking/model/booking.ts",
+    /* FAVORITES MODELS */
+    "./src/features/favorites/model/favorites.ts",
   ],
   dialect: 'postgresql',
   dbCredentials: {
