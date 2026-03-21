@@ -8,9 +8,18 @@ import Image from "next/image";
 import { cn } from "@/shared/lib/utils";
 import { calculateBookingTotal } from "@/shared/lib/booking-utils";
 import { EllipsisVertical } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
 import CancelBooking from "./cancel-booking";
+import { ArrowUpDown } from "lucide-react";
+import ModifyBooking from "./modify-booking";
 
 export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
     {
@@ -27,7 +36,7 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
             const imageSrc = resource?.image || "/assets/placeholder.svg";
 
             return (
-                <div className="flex items-center gap-3 justify-center">
+                <div className="flex items-center gap-3 justify-center w-full">
                     <div className="relative size-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
                         <Image
                             src={imageSrc}
@@ -36,16 +45,36 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
                             className="object-cover"
                         />
                     </div>
-                    <span className="font-bold text-slate-900">
-                        {resource?.name || "Unknown Resource"}
-                    </span>
+                    <div className="w-32 text-left">
+                        <span className="font-bold text-slate-900">
+                            {resource?.name || "Unknown Resource"}
+                        </span>
+                    </div>
                 </div>
             );
         },
     },
     {
         accessorKey: "startTime",
-        header: "Date & Time",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    <span className="font-bold">
+                        Date & Time
+                    </span>
+                    <ArrowUpDown
+                        className={cn(
+                            "ml-2 h-4 w-4",
+                            column.getIsSorted() ? "text-gb-blue" : "",
+                        )}
+                    />
+                </Button>
+            );
+        },
         cell: ({ row }) => {
             const start = new Date(row.getValue("startTime"));
             const end = new Date(row.original.endTime);
@@ -108,19 +137,40 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
         },
     },
     {
-        id: "total",
-        header: "Total Price",
-        cell: ({ row }) => {
+        accessorFn: (row) => {
             const resource = resources.find((r) =>
-                r.id === row.getValue("resourceId")
+                r.id === row.resourceId
             );
-            if (!resource) return "-";
+            if (!resource) return 0;
 
-            const total = calculateBookingTotal(
-                row.getValue("startTime"),
-                row.original.endTime,
+            return calculateBookingTotal(
+                row.startTime,
+                row.endTime,
                 resource,
             );
+        },
+        id: "total",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    <span className="font-bold">
+                        Total Price
+                    </span>
+                    <ArrowUpDown
+                        className={cn(
+                            "ml-2 h-4 w-4",
+                            column.getIsSorted() ? "text-gb-blue" : "",
+                        )}
+                    />
+                </Button>
+            );
+        },
+        cell: ({ row }) => {
+            const total = row.getValue("total") as number;
 
             return (
                 <span className="font-black text-slate-900">
@@ -136,7 +186,7 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
 
             const isNotAllowed = booking.startTime < new Date();
 
-            return(
+            return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button
@@ -147,14 +197,21 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-white" align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel className="px-3 py-2 text-slate-500 uppercase text-[10px] tracking-widset font-bold">
+                            Actions
+                        </DropdownMenuLabel>
+                        <ModifyBooking bookingId={booking.id}/>
+                        <DropdownMenuSeparator />
                         {isNotAllowed
-                            ? <DropdownMenuItem>The booking cannot be cancelled</DropdownMenuItem>
-                            : <CancelBooking booking={booking}/>
-                        }
+                            ? (
+                                <DropdownMenuItem>
+                                    The booking cannot be cancelled
+                                </DropdownMenuItem>
+                            )
+                            : <CancelBooking booking={booking} />}
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
-        }
-    }
+        },
+    },
 ];

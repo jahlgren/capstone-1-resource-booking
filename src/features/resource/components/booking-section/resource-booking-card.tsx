@@ -17,14 +17,23 @@ import BookingSubmitButton from "./booking-submit-button";
 import { cn } from "@/shared/lib/utils";
 import BookingPickerManager from "./booking-picker-manager";
 import { useRouter } from "next/navigation";
+import useBookingUpdateQuery from "@/features/booking/hooks/use-booking-update-query";
+import toast from "react-hot-toast";
 
 export default function ResourceBookingCard(
-    { resource, expanded }: { resource: Resource; expanded: boolean },
+    { resource, expanded, initialDate, mode = "create", bookingId }: {
+        resource: Resource;
+        expanded: boolean;
+        initialDate?: DateRange;
+        mode?: "create" | "edit";
+        bookingId: string;
+    },
 ) {
     const router = useRouter();
     const { data: bookings } = useBookingQuery();
-    const { mutate, isPending } = useCreateBookingMutation();
-    const [date, setDate] = useState<DateRange | undefined>(undefined);
+    const { mutate: createMutate, isPending } = useCreateBookingMutation();
+    const { mutate: updateMutate } = useBookingUpdateQuery();
+    const [date, setDate] = useState<DateRange | undefined>(initialDate);
 
     const bookingDuration = (() => {
         if (!date?.from || !date?.to) return 0;
@@ -38,7 +47,7 @@ export default function ResourceBookingCard(
         }
 
         if (resource.priceUnit === "week") {
-            const totalDays =  differenceInWeeks(date.to, date.from) + 1;
+            const totalDays = differenceInWeeks(date.to, date.from) + 1;
             return Math.max(1, Math.round(totalDays / 7));
         }
 
@@ -53,6 +62,25 @@ export default function ResourceBookingCard(
             from: new Date(b.startTime),
             to: new Date(b.endTime),
         })) || [];
+
+    const activeBookings =
+        bookings?.filter((b: Booking) =>
+            b.resourceId === resource.id &&
+            b.status !== "cancelled" &&
+            b.id !== bookingId // Add this to ignore the current booking during edit
+        ) || [];
+
+    const disabledCalendarDays = resource.priceUnit === "hour"
+        ? [] // Don't gray out days for hourly rentals!
+        : activeBookings.map((b: Booking) => ({
+            from: new Date(b.startTime),
+            to: new Date(b.endTime),
+        }));
+
+    const internalBookedRanges = activeBookings.map((b: Booking) => ({
+        from: new Date(b.startTime),
+        to: new Date(b.endTime),
+    }));
 
     const isRangeInvalid = date?.from && date?.to &&
         bookedRanges.some((range: DateRange) => {
@@ -72,16 +100,34 @@ export default function ResourceBookingCard(
             return;
         }
 
-        mutate({
-            resourceId: resource.id,
+        const payload = {
             startTime: date.from.toISOString(),
             endTime: date.to.toISOString(),
-        }, {
-            onSuccess: () => {
-                setDate(undefined);
-                router.push("/resources");
-            },
-        });
+        };
+
+        if (mode === "edit" && bookingId) {
+            // Edit Flow
+            updateMutate({
+                id: bookingId,
+                ...payload,
+            }, {
+                onSuccess: () => {
+                    toast.success("Reservation updated successfully!");
+                    router.push("/bookings"); // Take them back to the table
+                },
+            });
+        } else {
+            // Create Flow
+            createMutate({
+                resourceId: resource.id,
+                ...payload,
+            }, {
+                onSuccess: () => {
+                    setDate(undefined);
+                    router.push("/resources");
+                },
+            });
+        }
     };
 
     return (
@@ -112,7 +158,7 @@ export default function ResourceBookingCard(
                     unit={resource.priceUnit}
                     date={date}
                     onSelect={setDate}
-                    bookedRanges={bookedRanges}
+                    bookedRanges={disabledCalendarDays}
                 />
 
                 {datesSelected && !isRangeInvalid && !isTimeOrderInvalid &&
@@ -129,6 +175,7 @@ export default function ResourceBookingCard(
                 <BookingSubmitButton
                     onClick={onBook}
                     isLoading={isPending}
+                    mode={mode}
                     disabled={!datesSelected || bookingDuration <= 0 ||
                         isTimeOrderInvalid}
                     isRangeInvalid={!!isRangeInvalid || !!isTimeOrderInvalid}

@@ -8,7 +8,8 @@ export default function BookingSubmitButton({
     isLoading,
     disabled,
     isRangeInvalid,
-}: BookingSubmitButtonProps) {
+    mode = "create",
+}: BookingSubmitButtonProps & { mode?: "create" | "edit" }) {
     return (
         <div className="w-full space-y-2">
             <Button
@@ -25,12 +26,16 @@ export default function BookingSubmitButton({
                     ? (
                         <span className="flex items-center gap-2">
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            Confirming...
+                            {mode === "edit" ? "Updating..." : "Confirming..."}
                         </span>
                     )
                     : isRangeInvalid
                     ? (
                         "Dates Unavailable"
+                    )
+                    : mode === "edit"
+                    ? (
+                        "Save Changes"
                     )
                     : (
                         "Book Now"
@@ -39,7 +44,9 @@ export default function BookingSubmitButton({
 
             {!disabled && !isRangeInvalid && (
                 <p className="text-center text-[10px] text-slate-400 font-medium uppercase tracking-wider">
-                    Secure payment via OrderEase
+                    {mode === "edit"
+                        ? "Changes handled via OrderEase"
+                        : "Secure payment via OrderEase"}
                 </p>
             )}
         </div>

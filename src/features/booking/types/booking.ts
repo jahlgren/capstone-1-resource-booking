@@ -22,6 +22,12 @@ export type DeleteBookingPayload = {
   id: string;
 }
 
+export type UpdateBookingPayload = {
+  id: string;
+  startTime: string;
+  endTime: string;
+}
+
 export type HeaderSectionProps = {
   bookings: Booking[];
   resources: Resource[];
