@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "@/shared/components/ui/card";
-import { Resource } from "../../types/resource";
+import { Resource, ResourceBookingCardProps } from "../../types/resource";
 import BookingPriceSummary from "./booking-price-summary";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -21,13 +21,7 @@ import useBookingUpdateQuery from "@/features/booking/hooks/use-booking-update-q
 import toast from "react-hot-toast";
 
 export default function ResourceBookingCard(
-    { resource, expanded, initialDate, mode = "create", bookingId }: {
-        resource: Resource;
-        expanded: boolean;
-        initialDate?: DateRange;
-        mode?: "create" | "edit";
-        bookingId: string;
-    },
+    { resource, expanded, initialDate, mode = "create", bookingId }: ResourceBookingCardProps
 ) {
     const router = useRouter();
     const { data: bookings } = useBookingQuery();
@@ -83,7 +77,7 @@ export default function ResourceBookingCard(
     }));
 
     const isRangeInvalid = date?.from && date?.to &&
-        bookedRanges.some((range: DateRange) => {
+        internalBookedRanges.some((range: DateRange) => {
             const selectedFrom = date.from!.getTime();
             const selectedTo = date.to!.getTime();
             const rangeFrom = range.from!.getTime();
@@ -106,18 +100,16 @@ export default function ResourceBookingCard(
         };
 
         if (mode === "edit" && bookingId) {
-            // Edit Flow
             updateMutate({
                 id: bookingId,
                 ...payload,
             }, {
                 onSuccess: () => {
                     toast.success("Reservation updated successfully!");
-                    router.push("/bookings"); // Take them back to the table
+                    router.push("/bookings");
                 },
             });
         } else {
-            // Create Flow
             createMutate({
                 resourceId: resource.id,
                 ...payload,
@@ -129,6 +121,10 @@ export default function ResourceBookingCard(
             });
         }
     };
+
+    const handleReset = () => {
+        setDate(initialDate);
+    }
 
     return (
         <Card
@@ -179,6 +175,7 @@ export default function ResourceBookingCard(
                     disabled={!datesSelected || bookingDuration <= 0 ||
                         isTimeOrderInvalid}
                     isRangeInvalid={!!isRangeInvalid || !!isTimeOrderInvalid}
+                    handleReset={handleReset}
                 />
             </div>
         </Card>

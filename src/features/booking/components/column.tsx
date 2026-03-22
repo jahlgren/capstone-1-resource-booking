@@ -138,9 +138,7 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
     },
     {
         accessorFn: (row) => {
-            const resource = resources.find((r) =>
-                r.id === row.resourceId
-            );
+            const resource = resources.find((r) => r.id === row.resourceId);
             if (!resource) return 0;
 
             return calculateBookingTotal(
@@ -184,7 +182,7 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
         cell: ({ row }) => {
             const booking = row.original;
 
-            const isNotAllowed = booking.startTime < new Date();
+            const isNotAllowed = new Date(booking.startTime) < new Date();
 
             return (
                 <DropdownMenu>
@@ -200,11 +198,17 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
                         <DropdownMenuLabel className="px-3 py-2 text-slate-500 uppercase text-[10px] tracking-widset font-bold">
                             Actions
                         </DropdownMenuLabel>
-                        <ModifyBooking bookingId={booking.id}/>
+                        {isNotAllowed
+                            ? (
+                                <DropdownMenuItem disabled>
+                                    The booking cannot be modified
+                                </DropdownMenuItem>
+                            )
+                            : <ModifyBooking bookingId={booking.id} />}
                         <DropdownMenuSeparator />
                         {isNotAllowed
                             ? (
-                                <DropdownMenuItem>
+                                <DropdownMenuItem disabled>
                                     The booking cannot be cancelled
                                 </DropdownMenuItem>
                             )

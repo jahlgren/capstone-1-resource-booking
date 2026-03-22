@@ -1,3 +1,4 @@
+import { Booking } from "@/features/booking/types/booking";
 import { DateRange } from "react-day-picker";
 
 export type Resource = {
@@ -43,6 +44,7 @@ export type BookingSubmitButtonProps = {
     isLoading: boolean;
     disabled: boolean | undefined;
     isRangeInvalid: boolean;
+    handleReset: () => void;
 }
 
 export type BookingPickerManagerProps = {
@@ -50,4 +52,11 @@ export type BookingPickerManagerProps = {
     date: DateRange | undefined;
     onSelect: (date: DateRange | undefined) => void;
     bookedRanges: DateRange[];
+}
+export type ResourceBookingCardProps = {
+    resource: Resource;
+    expanded: boolean;
+    initialDate?: DateRange;
+    mode?: "create" | "edit";
+    bookingId?: string;
 }
