@@ -3,9 +3,10 @@ import { CreateFavoriteInput, Favorites } from "../types/favorites";
 import { Favorites as FavoritesTypes } from "../types/favorites";
 import toast from "react-hot-toast";
 
-
-async function handleCreateFavorite(input: CreateFavoriteInput): Promise<FavoritesTypes> {
-    const res = await fetch("/api/resource/favorites", {
+async function handleCreateFavorite(
+    input: CreateFavoriteInput,
+): Promise<FavoritesTypes> {
+    const res = await fetch("/api/resource/favorite", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -21,29 +22,59 @@ async function handleCreateFavorite(input: CreateFavoriteInput): Promise<Favorit
 
 export default function useCreateFavoriteMutation() {
     const queryClient = useQueryClient();
-    return useMutation<FavoritesTypes, Error, CreateFavoriteInput, { toastId: string }>({
+    return useMutation<
+        FavoritesTypes,
+        Error,
+        CreateFavoriteInput,
+        { previousFavorites?: FavoritesTypes[] }
+    >({
         mutationFn: async (input) => await handleCreateFavorite(input),
         retry: false,
-        onMutate: ()=> {
-            const toastId = toast.loading("Adding to favorites...");
-            return { toastId };
+        onMutate: async (newfavorites) => {
+            await queryClient.cancelQueries({ queryKey: ["favorites"] });
+
+            const previousFavorites = queryClient.getQueryData<
+                FavoritesTypes[]
+            >(["favorites"]);
+
+            queryClient.setQueryData<FavoritesTypes[]>(
+                ["favorites"],
+                (old = []) => {
+                    const exits = old.some((f) =>
+                        f.resourceId === newfavorites.resourceId
+                    );
+
+                    if (exits) {
+                        return old.filter((f) =>
+                            f.resourceId !== newfavorites.resourceId
+                        );
+                    } else {
+                        return [
+                            ...old,
+                            {
+                                resourceId: newfavorites.resourceId,
+                                id: Math.random(),
+                                createdAt: new Date(),
+                                userId: "temp",
+                            } as FavoritesTypes,
+                        ];
+                    }
+                },
+            );
+
+            return { previousFavorites };
         },
-         onError: (err, _, context) => {
-            toast.error((
-                <div>
-                    <strong className="font-medium">Failed to add favorite</strong>
-                    <p>{err.message}</p>
-                </div>
-            ), {
-                id: context?.toastId,
-                duration: 3000
-            });
+        onError: (err, newFavorite, context) => {
+            if (context?.previousFavorites) {
+                queryClient.setQueryData(
+                    ["favorites"],
+                    context.previousFavorites,
+                );
+            }
+            toast.error("Couldn't update favorite. Try again.");
         },
-        onSuccess: () => {
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["favorites"] });
-            toast.success("Added favorites success", {
-                duration: 2000
-            });
         },
     });
 }

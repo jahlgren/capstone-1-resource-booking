@@ -1,16 +1,15 @@
 import db from "@/db";
-import {resource} from "@/features/resource/model/resource";
 import { eq } from "drizzle-orm";
 import { favorites } from "@/features/favorites/model/favorites";
-import { get } from "http";
-import { stat } from "fs";
+import type { Favorites } from "../types/favorites";
 
 export async function getFavoriteResourcesByUserId(userId: string) {
-    const favoriteResources = await db.select().from(resource)  
-        .innerJoin(favorites, eq(resource.id, favorites.resourceId))
-        .where(eq(favorites.userId, userId))
-        .then((rows) => rows.map(({resource}) => ({...resource, isUserFavorite: true})));
-    return favoriteResources;
+    // Return the favorites rows so the client can use `resourceId` to determine
+    // whether a resource is favorited.
+    return db
+        .select()
+        .from(favorites)
+        .where(eq(favorites.userId, userId)) as Promise<Favorites[]>;
 }
 
 

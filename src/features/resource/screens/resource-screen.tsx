@@ -13,11 +13,13 @@ import { useSearchParams } from "next/navigation";
 import { Resource } from "../types/resource";
 import CategoryFilter from "../components/category-filter";
 import useResourceFilter from "../hooks/use-resource-filter";
+import useFavoritesQuery from "@/features/favorites/hooks/use-favorite-query";
 
 export default function resourceScreen() {
   const { data: resources, isPending } = useResourcesQuery();
+  const { data: favorites, isLoading: isFavoritesLoading } = useFavoritesQuery();
 
-  const { filteredResources } = useResourceFilter(resources)
+  const { filteredResources } = useResourceFilter(resources);
 
   return (
     <div className="flex-1 py-6 mx-10">
@@ -64,9 +66,9 @@ export default function resourceScreen() {
         <CategoryFilter />
 
         <div className="">
-          {isPending
+          {isPending || isFavoritesLoading
             ? <SkeletonCard />
-            : <ListResource resources={filteredResources} />}
+            : <ListResource resources={filteredResources || []} userFavorites={favorites || []} />}
         </div>
       </div>
     </div>

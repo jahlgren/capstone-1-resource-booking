@@ -1,8 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Booking, CreateBookingPayload } from "../types/booking";
+import {
+    Booking,
+    Bookings as BookingsTypes,
+    CreateBookingPayload,
+} from "../types/booking";
 import toast from "react-hot-toast";
 
-async function handleCreateBooking(payload: CreateBookingPayload) {
+async function handleCreateBooking(
+    payload: CreateBookingPayload,
+): Promise<BookingsTypes> {
     const res = await fetch("/api/booking", {
         method: "POST",
         headers: {

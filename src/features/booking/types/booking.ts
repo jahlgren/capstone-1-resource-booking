@@ -1,5 +1,10 @@
 import { Resource } from "@/features/resource/types/resource";
 import { ColumnDef } from "@tanstack/react-table";
+import { InferSelectModel } from "drizzle-orm";
+import { booking } from "../model/booking";
+
+export type Bookings = InferSelectModel<typeof booking>;
+
 
 export type Booking = {
   id: string;

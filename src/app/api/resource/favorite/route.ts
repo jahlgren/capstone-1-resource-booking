@@ -28,9 +28,11 @@ export async function POST(req: Request) {
         if (!resourceId) {
             return new Response(JSON.stringify({ error: "Resource ID is required" }), { status: 400 });
         }
-        // Check if the favorite already exists, this is not fully tested... but should work  //Christian      
+        // Toggle favorite:
+        // - if the favorite row already exists for this `resourceId`, delete it
+        // - otherwise create it
         const existingFavorites = await getFavoriteResourcesByUserId(session.user.id);
-        if (existingFavorites.some(fav => fav.id === resourceId)) {
+        if (existingFavorites.some((fav) => fav.resourceId === resourceId)) {
             deleteFavorite(session.user.id, resourceId);
             return new Response(JSON.stringify({ message: "Favorite removed" }), { status: 200 });
         }

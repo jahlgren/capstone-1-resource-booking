@@ -13,14 +13,29 @@ import {
 import { IconSearchOff } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Bookmark, DollarSign } from "lucide-react";
+import { Bookmark } from "lucide-react";
+import useCreateFavoriteMutation from "@/features/favorites/hooks/use-favorite-create";
+import { cn } from "@/shared/lib/utils";
+import { Favorites } from "@/features/favorites/types/favorites";
 
-export default function ListResource({ resources }: { resources: Resource[] }) {
+export default function ListResource(
+  { resources, userFavorites = [] }: {
+    resources: Resource[];
+    userFavorites: Favorites[];
+  },
+) {
   const router = useRouter();
   const pathname = usePathname();
+  const { mutate } = useCreateFavoriteMutation();
 
   const handleResetFilters = () => {
     router.replace(pathname);
+  };
+
+  const onToggleFavorites = (resourceId: string) => {
+    mutate({
+      resourceId: resourceId,
+    });
   };
 
   return (
@@ -28,74 +43,94 @@ export default function ListResource({ resources }: { resources: Resource[] }) {
       {resources && resources.length > 0
         ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center max-w-7xl mx-auto">
-            {resources.map((res: Resource) => (
-              <Card
-                key={res.id}
-                className="relative pt-0 overflow-hidden"
-              >
-                <div className="absolute inset-0 aspect-video" />
-                <img
-                  src={res.image || "/assets/placeholder.svg"}
-                  alt={res.name}
-                  className="relative z-20 aspect-video w-full object-cover brightness-100 dark:brightness-60"
-                />
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardDescription className="text-[10px] text-gb-blue font-bold tracking-widest uppercase">
-                        {res.category}
-                      </CardDescription>
-                      <CardTitle className="text-xl font-bold text-slate-900 line-clamp-1">
-                        {res.name}
-                      </CardTitle>
-                    </div>
+            {resources.map((res: Resource) => {
+              const isFavorited = userFavorites.some((fav) =>
+                fav.resourceId === res.id
+              );
 
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-transparent group"
+              return (
+                <Card
+                  key={res.id}
+                  className="relative pt-0 overflow-hidden"
+                >
+                  <div className="absolute inset-0 aspect-video" />
+                  <img
+                    src={res.image || "/assets/placeholder.svg"}
+                    alt={res.name}
+                    className="relative z-20 aspect-video w-full object-cover brightness-100 dark:brightness-60"
+                  />
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardDescription className="text-[10px] text-gb-blue font-bold tracking-widest uppercase">
+                          {res.category}
+                        </CardDescription>
+                        <CardTitle className="text-xl font-bold text-slate-900 line-clamp-1">
+                          {res.name}
+                        </CardTitle>
+                      </div>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onToggleFavorites(res.id)}
+                        className="hover:bg-transparent group active:scale-90 transition-transform"
+                      >
+                        <Bookmark
+                          className={cn(
+                            "size-6 transition-all duration-300",
+                            isFavorited
+                              ? "fill-gb-blue text-gb-blue"
+                              : "text-slate-400 group-hover:text-gb-blue",
+                          )}
+                        />
+                      </Button>
+                    </div>
+                    <CardDescription className="text-sm line-clamp-2 min-h-[40px]">
+                      {res.description}
+                    </CardDescription>
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-baseline">
+                        <span className="font-bold text-sm text-slate-900 mr-0.5">
+                          $
+                        </span>
+                        <span className="text-2xl font-black text-slate-900 tracking-tight">
+                          {res.price}
+                        </span>
+                        <span className="ml-1.5 text-sm font-medium text-slate-500 lowercase italic">
+                          per {res.priceUnit}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 rounded-full border border-green-100">
+                        <div className="size-1.5 bg-green-500 rounded-full" />
+                        <span className="text-[10px] font-bold text-green-600 uppercase">
+                          Ready
+                        </span>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <Link
+                      href={`/resources/${res.id}`}
+                      className="w-full sm:flex-1"
                     >
-                      <Bookmark className="size-6 transition-colors group-hover:text-gb-blue" />
-                    </Button>
-                  </div>
-                  <CardDescription className="text-sm line-clamp-2 min-h-[40px]">
-                    {res.description}
-                  </CardDescription>
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-baseline">
-                      <span className="font-bold text-sm text-slate-900 mr-0.5">
-                        $
-                      </span>
-                      <span className="text-2xl font-black text-slate-900 tracking-tight">
-                        {res.price}
-                      </span>
-                      <span className="ml-1.5 text-sm font-medium text-slate-500 lowercase italic">
-                        per {res.priceUnit}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 rounded-full border border-green-100">
-                      <div className="size-1.5 bg-green-500 rounded-full" />
-                      <span className="text-[10px] font-bold text-green-600 uppercase">
-                        Ready
-                      </span>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <Link href={`/resources/${res.id}`} className="w-full sm:flex-1">
-                    <Button className="w-full rounded-xl hover:-translate-y-1 transition-all duration-300">
-                      View Details
-                    </Button>
-                  </Link>
-                  <Link href={`/resources/${res.id}?action=book`} className="w-full sm:flex-1">
-                    <Button className="w-full bg-gb-blue hover:bg-gb-blue/90 rounded-xl hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-gb-blue/20">
-                      Book Now
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
+                      <Button className="w-full rounded-xl hover:-translate-y-1 transition-all duration-300">
+                        View Details
+                      </Button>
+                    </Link>
+                    <Link
+                      href={`/resources/${res.id}?action=book`}
+                      className="w-full sm:flex-1"
+                    >
+                      <Button className="w-full bg-gb-blue hover:bg-gb-blue/90 rounded-xl hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-gb-blue/20">
+                        Book Now
+                      </Button>
+                    </Link>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
         )
         : (

@@ -2,7 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Favorites } from "../types/favorites";
 
 async function fetchFavorites(): Promise<Favorites[]> {
-    const res = await fetch("/api/resource/favorites");
+    const res = await fetch("/api/resource/favorite", {
+        method: "GET",
+        headers: {  
+            "Content-Type": "application/json",
+        },
+    });
     if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message || "Failed to fetch favorites");
