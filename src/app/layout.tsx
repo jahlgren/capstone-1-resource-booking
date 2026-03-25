@@ -38,7 +38,7 @@ export default async function RootLayout({
       >
         <Providers>
           <div className="flex flex-col min-h-screen">
-            {session?.user && <Navbar />}
+            {session?.user && <Navbar user={session?.user}/>}
             <main className="flex-1">
               {children}
             </main>

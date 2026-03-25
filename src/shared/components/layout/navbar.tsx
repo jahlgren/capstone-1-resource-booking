@@ -25,9 +25,14 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "../ui/sheet";
-import { Menu } from "lucide-react";
+import { Bell, Menu, Package, User } from "lucide-react";
+import { Session } from "@/features/auth/types/session";
 
-const Navbar = () => {
+type NavbarProps = {
+    user: NonNullable<Session["user"]>;
+}
+
+const Navbar = ({ user }: NavbarProps) => {
     const pathname = usePathname();
 
     const navlinks = [
@@ -35,6 +40,13 @@ const Navbar = () => {
         { name: "Bookings", href: "/bookings" },
         { name: "Favorites", href: "/favorites" },
     ];
+
+    const parts = user.name.trim().split(/\s+/);
+    const first = parts[0]?.[0];
+    const last = parts.length > 1 
+        ? parts[parts.length - 1][0]
+        : "";
+    const initials = (first + last).toUpperCase();
 
     return (
         <div className="flex items-center justify-between px-4 sm:px-8 h-20 bg-white border-b border-slate-100 shadow-sm sticky top-0 z-50">
@@ -132,27 +144,77 @@ const Navbar = () => {
                     <DropdownMenuTrigger asChild>
                         <Button
                             variant="ghost"
-                            size="icon"
-                            className="rounded-full h-18 w-18 p-0"
+                            className="rounded-full h-12 w-12 p-0 border-2 border-slate-100 hover:border-gb-blue transition-all"
                         >
-                            <Avatar className="h-18 w-18">
-                                <AvatarImage src="" />
-                                <AvatarFallback>Avatar</AvatarFallback>
+                            <Avatar className="h-12 w-12">
+                                <AvatarImage src={user.image || ""} />
+                                <AvatarFallback className="bg-gb-blue text-white">
+                                    {initials}
+                                </AvatarFallback>
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent
+                        className="w-56 mt-2 rounded-2xl shadow-2xl border border-slate-200 bg-white/95 backdrop-blur-md"
+                        align="end"
+                    >
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>My Listings</DropdownMenuItem>
-                            <DropdownMenuItem>
-                                Incoming Requests
+                            <DropdownMenuItem
+                                asChild
+                                className="cursor-pointer py-3 rounded-lg"
+                            >
+                                <Link
+                                    href="/profile"
+                                    className="flex items-center"
+                                >
+                                    <User className="mr-3 size-4 text-slate-500" />
+                                    <span className="font-semibold text-slate-700">
+                                        Profile
+                                    </span>
+                                </Link>
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                asChild
+                                className="cursor-pointer py-3 rounded-lg"
+                            >
+                                <Link
+                                    href="/my-listings"
+                                    className="flex items-center"
+                                >
+                                    <Package className="mr-3 size-4 text-slate-500" />
+                                    <span className="font-semibold text-slate-700">
+                                        My Listings
+                                    </span>
+                                </Link>
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                asChild
+                                className="cursor-pointer py-3 rounded-lg"
+                            >
+                                <Link
+                                    href="/requests"
+                                    className="flex items-center"
+                                >
+                                    <Bell className="mr-3 size-4 text-slate-500" />
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold text-slate-700">
+                                            Incoming Requests
+                                        </span>
+                                        <span className="text-[10px] text-gb-blue font-bold uppercase tracking-tighter">
+                                            Manage Approvals
+                                        </span>
+                                    </div>
+                                </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
+
+                        <DropdownMenuSeparator className="bg-slate-100" />
+
+                        <div className="p-1">
                             <LogoutButton />
-                        </DropdownMenuGroup>
+                        </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
