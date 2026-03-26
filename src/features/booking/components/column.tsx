@@ -30,7 +30,7 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
                 r.id === row.getValue("resourceId")
             );
             if (!resource) {
-                return <span className="text-slate-400">Unknown Resource</span>;
+                return <span className="text-slate-400">Currently resource was deleted</span>;
             }
 
             const imageSrc = resource?.image || "/assets/placeholder.svg";

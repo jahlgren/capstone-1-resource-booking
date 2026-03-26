@@ -1,5 +1,5 @@
 import { Session } from "@/features/auth/types/session";
 
-export type ProfileProps = {
+export type MyListingsProps = {
     user: NonNullable<Session["user"]>;
 }

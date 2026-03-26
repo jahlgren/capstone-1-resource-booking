@@ -12,7 +12,7 @@ export default async function ResourcesPage() {
   if(session?.user){
     return(
         <div className="flex flex-col flex-1 min-h-full">
-            <ResourceScreen />
+            <ResourceScreen user={session?.user}/>
         </div>
     );
   }

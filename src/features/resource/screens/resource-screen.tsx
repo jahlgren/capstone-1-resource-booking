@@ -14,8 +14,9 @@ import { Resource } from "../types/resource";
 import CategoryFilter from "../components/category-filter";
 import useResourceFilter from "../hooks/use-resource-filter";
 import useFavoritesQuery from "@/features/favorites/hooks/use-favorite-query";
+import { Session } from "@/features/auth/types/session";
 
-export default function resourceScreen() {
+export default function resourceScreen({ user }: { user: NonNullable<Session["user"]>; }) {
   const { data: resources, isPending } = useResourcesQuery();
   const { data: favorites, isLoading: isFavoritesLoading } = useFavoritesQuery();
 
@@ -35,7 +36,7 @@ export default function resourceScreen() {
           </div>
 
           <div className="w-auto">
-            <CreateResourceDialog>
+            <CreateResourceDialog user={user}>
               <Button
                 className={cn(
                   "h-14 px-8 rounded-xl",

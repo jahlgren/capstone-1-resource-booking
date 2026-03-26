@@ -1,5 +1,6 @@
 import { Booking } from "@/features/booking/types/booking";
 import { DateRange } from "react-day-picker";
+import { CreateResourceInput } from "../validation/create-resource-validator";
 
 export type Resource = {
     id: string;
@@ -59,4 +60,28 @@ export type ResourceBookingCardProps = {
     initialDate?: DateRange;
     mode?: "create" | "edit";
     bookingId?: string;
+}
+
+export type DeletePayload = {
+    id: string;
+}
+
+export type UpdatePayload = {
+    id: string;
+    name: string;
+    description: string | null;
+    image?: string | null;
+    price: number;
+    priceUnit: priceUnit;
+    category: category;
+}
+
+export type ResourceFormProps = {
+    initialData?: Partial<Omit<CreateResourceInput, "image">> & {
+        image?: string | null;
+    };
+    onSubmit: (values: CreateResourceInput) => Promise<void>;
+    isPending: boolean;
+    submitLabel: string;
+    onCancel: () => void;
 }

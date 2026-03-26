@@ -5,8 +5,8 @@ import { Card } from "@/shared/components/ui/card";
 import { CalendarCheck, Package, Star } from "lucide-react";
 
 export default function Stats({ resources, bookings }: { resources: Resource[], bookings: Booking[] }) {
-    const listingsCount = resources.length.toString();
-    const bookingsCount = bookings.length.toString();
+    const listingsCount = resources?.length.toString();
+    const bookingsCount = bookings?.length.toString();
 
     const stats = [
         {
