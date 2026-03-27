@@ -82,4 +82,5 @@ Available routes:
 * DELETE → /api/resource/[id] - Delete resource by id
 * GET → /api/resource/favorite - Get all favorites for the user
 * POST → /api/resource/favorite - Create a new favorite, with body { resourceId: string }, works as a toggle, if the favorite already exists it will be deleted
-
+* GET → /api/manage-bookings - Retrieve all incoming booking requests for resources owned by the current user (Provider view)
+* PUT → /api/manage-bookings - Update the status of an incoming request (e.g., set to confirmed or cancelled). Expects { id: string, status: BookingStatus }
