@@ -11,8 +11,9 @@ import { Calendar, Check, DollarSign, Wallet, X } from "lucide-react";
 import { format } from "date-fns";
 import useManageBookingsMutation from "../hooks/use-manage-bookings-update-query";
 import { calculateBookingTotal } from "@/shared/lib/booking-utils";
+import { ManageBookingRequest } from "../types/manage-bookings";
 
-export default function RequestCard({ request }: { request: any }) {
+export default function RequestCard({ request }: { request: ManageBookingRequest }) {
     const { mutate: updateStatus, isPending: isUpdating } =
         useManageBookingsMutation();
 
@@ -25,7 +26,7 @@ export default function RequestCard({ request }: { request: any }) {
     const { subtotal } = calculateBookingTotal(
         new Date(request.startTime),
         new Date(request.endTime),
-        request
+        { price: request.price, priceUnit: request.priceUnit } as any
     );
 
     return (

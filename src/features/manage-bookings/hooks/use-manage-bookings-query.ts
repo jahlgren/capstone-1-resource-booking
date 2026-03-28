@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { ManageBookingRequest } from "../types/manage-bookings";
 
 async function getBookingsRequests() {
     const res = await fetch("/api/manage-bookings");
@@ -10,7 +11,7 @@ async function getBookingsRequests() {
 }
 
 export default function useManageBookingsQuery() {
-    return useQuery({
+    return useQuery<ManageBookingRequest[]>({
         queryKey: ["manage-bookings"],
         queryFn: getBookingsRequests,
         retry: false,

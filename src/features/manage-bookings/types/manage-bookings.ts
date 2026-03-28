@@ -2,20 +2,25 @@ import { Resource } from "@/features/resource/types/resource";
 
 export type BookingStatus = "pending" | "confirmed" | "cancelled";
 
-export type IncomingRequest = {
+export type ManageBookingRequest = {
     id: string;
-    startDate: string;
-    endDate: string;
-    totalPrice: number;
     status: BookingStatus;
-    user: {
-        name: string;
-        image?: string | null;
-    };
-    resource: Pick<Resource, "name" | "image">;
+    startTime: string | Date;
+    endTime: string | Date;
+    createdAt: string | Date;
+    resourceName: string;
+    resourceImage: string | null;
+    price: number;
+    priceUnit: Resource["priceUnit"];
+    renterName: string;
+    renterImage: string | null;
 };
 
 export type updateBookingsRequestPayload = {
     id: string;
     status: BookingStatus;
+}
+
+export type RevenueSummaryProps = {
+    historyRequests: ManageBookingRequest[];
 }

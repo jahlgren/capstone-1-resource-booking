@@ -2,9 +2,10 @@
 
 import { Calendar, TrendingUp, Wallet } from "lucide-react";
 import { calculateBookingTotal } from "@/shared/lib/booking-utils";
+import { RevenueSummaryProps } from "../types/manage-bookings";
 
 export default function RevenueSummary(
-    { historyRequests }: { historyRequests: any[] },
+    { historyRequests }: RevenueSummaryProps,
 ) {
     const totalEarnings = historyRequests
         .filter((req) => req.status === "confirmed")
@@ -12,7 +13,7 @@ export default function RevenueSummary(
             const { subtotal } = calculateBookingTotal(
                 new Date(req.startTime),
                 new Date(req.endTime),
-                req,
+                { price: req.price, priceUnit: req.priceUnit } as any,
             );
             return acc + subtotal;
         }, 0);
