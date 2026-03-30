@@ -33,7 +33,7 @@ export default function ProfileScreen({ user }: ProfileProps) {
                 <FinanceSection historyRequests={requests}/>
 
                 {/* 3. Details & Support */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     <div className="lg:col-span-2">
                         <DetailsForm />
                     </div>

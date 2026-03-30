@@ -1,5 +1,5 @@
 "use client";
-import React, { use } from "react";
+import React from "react";
 import CreateResourceDialog from "../components/create-resource-dialog";
 import { Button } from "@/shared/components/ui/button";
 import useResourcesQuery from "../hooks/use-resource-query";
@@ -9,8 +9,6 @@ import SearchResource from "../components/search-resource";
 import FilterResource from "../components/filter-resource";
 import SkeletonCard from "../components/skeleton-card";
 import { cn } from "@/shared/lib/utils";
-import { useSearchParams } from "next/navigation";
-import { Resource } from "../types/resource";
 import CategoryFilter from "../components/category-filter";
 import useResourceFilter from "../hooks/use-resource-filter";
 import useFavoritesQuery from "@/features/favorites/hooks/use-favorite-query";

@@ -6,7 +6,7 @@ import { Label } from "@/shared/components/ui/label";
 
 export default function DetailsForm() {
     return (
-        <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
+        <div className="lg:col-span-2 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-9">
             <div>
                 <h3 className="text-2xl font-black text-slate-900">
                     Personal Details
