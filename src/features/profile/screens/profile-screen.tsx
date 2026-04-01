@@ -14,7 +14,7 @@ export default function ProfileScreen({ user }: ProfileProps) {
     const { data: resources } = useResourcesQuery();
     const { data: bookings } = useBookingQuery();
 
-    const { data: requests, isPending } = useManageBookingsQuery();
+    const { data: requests } = useManageBookingsQuery();
 
     return (
         <div className="flex-1 min-h-screen bg-slate-50/50 py-12 px-6 md:px-10">
@@ -31,11 +31,11 @@ export default function ProfileScreen({ user }: ProfileProps) {
 
                     <FinanceSection historyRequests={requests} />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="lg:col-span-2">
-                            <DetailsForm />
+                            <DetailsForm user={user} />
                         </div>
-                        <div className="sticky top-24 lg:col-span-1">
+                        <div className="sticky top-24 lg:col-span-1 h-fit min-h-full">
                             <SupportCard />
                         </div>
                     </div>

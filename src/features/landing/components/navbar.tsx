@@ -21,7 +21,7 @@ export default function Navbar() {
             <div className="flex items-center gap-1">
                 <div className="relative w-10 h-10 sm:w-16 sm:h-16">
                     <Image
-                        src="/assets/logo.png"
+                        src="/assets/logo.webp"
                         alt="Logo"
                         fill
                         priority
@@ -40,7 +40,19 @@ export default function Navbar() {
             </div>
 
             {/* Sign In Button */}
-            <div>
+            <div className="flex items-center gap-4 md:gap-8">
+                <Link
+                    href="/about"
+                    className={cn(
+                        "text-sm font-black uppercase tracking-widest transition-colors duration-500",
+                        isScrolled
+                            ? "text-slate-600 hover:text-gb-blue"
+                            : "text-white/90 hover:text-white",
+                    )}
+                >
+                    About
+                </Link>
+
                 <Button
                     asChild
                     className={cn(

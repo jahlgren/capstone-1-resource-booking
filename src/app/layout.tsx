@@ -7,6 +7,7 @@ import Navbar from "@/shared/components/layout/navbar";
 import { headers } from "next/headers";
 import { auth } from "@/features/auth/server/auth-server";
 import Footer from "@/shared/components/layout/footer";
+import HelpFab from "@/shared/components/layout/help-fab";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default async function RootLayout({
             <main className="flex-1">
               {children}
             </main>
+            {session?.user && <HelpFab />}
             {session?.user && <Footer />}
             <Toaster />
           </div>

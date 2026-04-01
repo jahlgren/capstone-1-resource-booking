@@ -2,6 +2,7 @@
 
 import { Lock, ShieldCheck, UserCog } from "lucide-react";
 import { CircularCard } from "./circular-card";
+import { motion } from "framer-motion";
 
 const trustFeatures = [
     {
@@ -48,13 +49,26 @@ export default function TrustSection() {
                 </div>
 
                 <div className="grid grid-cols-1 justify-items-center gap-12 md:grid-cols-2 xl:grid-cols-3 xl:gap-16">
-                    {trustFeatures.map((trustFeature) => (
-                        <CircularCard
+                    {trustFeatures.map((trustFeature, index) => (
+                        <motion.div
                             key={trustFeature.feature}
-                            icon={trustFeature.icon}
-                            feature={trustFeature.feature}
-                            description={trustFeature.description}
-                        />
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{
+                                duration: 0.6,
+                                delay: index * 0.2,
+                                type: "spring",
+                                stiffness: 100,
+                            }}
+                        >
+                            <CircularCard
+                                key={trustFeature.feature}
+                                icon={trustFeature.icon}
+                                feature={trustFeature.feature}
+                                description={trustFeature.description}
+                            />
+                        </motion.div>
                     ))}
                 </div>
             </div>

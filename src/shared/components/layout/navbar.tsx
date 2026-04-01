@@ -100,7 +100,7 @@ const Navbar = ({ user }: NavbarProps) => {
                 <Link href="/" className="flex items-center gap-1 sm:gap-3 ">
                     <div className="relative w-10 h-10 sm:w-16 sm:h-16">
                         <Image
-                            src="/assets/logo.png"
+                            src="/assets/logo.webp"
                             alt="Logo"
                             fill
                             className="object-contain"

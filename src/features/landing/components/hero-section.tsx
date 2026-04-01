@@ -7,8 +7,9 @@ import Link from "next/link";
 export default function HeroSection() {
     return (
         <div className="relative w-full h-[700px] overflow-hidden">
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-transparent to-transparent h-40 pointer-events-none" />
             <Image
-                src="/assets/hero.png"
+                src="/assets/hero.webp"
                 alt="Hero"
                 fill
                 priority

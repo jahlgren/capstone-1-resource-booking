@@ -13,7 +13,7 @@ export default function LoginPage() {
       <div className="relative z-10 flex w-full max-w-sm flex-col gap-6">
         <Link href="/" className="flex items-center gap-3 self-center font-bold text-2xl">
           <Image
-            src="/assets/logo.png"
+            src="/assets/logo.webp"
             alt="Logo"
             width={40}
             height={40}

@@ -9,7 +9,7 @@ export default function AboutScreen({ user }: { user?: Session["user"] }) {
     return (
         <div className="flex-1 min-h-screen bg-slate-50/50 py-12 px-6 md:px-10 overflow-x-hidden">
             <div className="max-w-5xl mx-auto space-y-10">
-                <AboutHeader user={user}/>
+                <AboutHeader user={user} />
 
                 <div className="grid gap-8">
                     {/* General Info */}
@@ -49,14 +49,32 @@ export default function AboutScreen({ user }: { user?: Session["user"] }) {
                             platform is currently in a{" "}
                             <strong>preview/educational state</strong>.
                         </p>
-                        <ul className="list-disc pl-5 space-y-2">
-                            <li>
-                                All booking data is for demonstration purposes.
-                            </li>
-                            <li>No real financial transactions take place.</li>
-                            <li>
-                                Users are responsible for the items they list.
-                            </li>
+                        <ul className="space-y-4 pt-4">
+                            {[
+                                "All booking data is for demonstration purposes.",
+                                "No real financial transactions take place.",
+                                "Users are responsible for the items they list.",
+                            ].map((item, i) => (
+                                <li
+                                    key={i}
+                                    className="flex items-start gap-3 group"
+                                >
+                                    <div className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                            className="size-2.5"
+                                        >
+                                            <path d="M20 6L9 17L4 12" />
+                                        </svg>
+                                    </div>
+                                    <span className="text-slate-600 font-medium leading-relaxed">
+                                        {item}
+                                    </span>
+                                </li>
+                            ))}
                         </ul>
                     </AboutSection>
 
