@@ -13,7 +13,7 @@ import {
 import { IconSearchOff } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Star } from "lucide-react";
 import useCreateFavoriteMutation from "@/features/favorites/hooks/use-favorite-create";
 import { cn } from "@/shared/lib/utils";
 import { Favorites } from "@/features/favorites/types/favorites";
@@ -68,6 +68,38 @@ export default function ListResource(
                         <CardTitle className="text-xl font-bold text-slate-900 line-clamp-1">
                           {res.name}
                         </CardTitle>
+                        <div
+                          className="mt-1.5 flex items-center gap-1.5"
+                          aria-label={
+                            res.avgRating
+                              ? `Rated ${Number(res.avgRating).toFixed(1)} out of 5, ${res.totalReviews} reviews`
+                              : "No reviews yet"
+                          }
+                        >
+                          <Star
+                            className={cn(
+                              "size-3.5 shrink-0",
+                              res.avgRating
+                                ? "fill-amber-400 text-amber-400"
+                                : "fill-slate-200/80 text-slate-300",
+                            )}
+                            strokeWidth={res.avgRating ? 0 : 1.5}
+                          />
+                          {res.avgRating ? (
+                            <>
+                              <span className="text-sm font-bold tabular-nums text-slate-900">
+                                {Number(res.avgRating).toFixed(1)}
+                              </span>
+                              <span className="text-xs font-medium text-slate-500">
+                                ({res.totalReviews})
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-xs font-semibold text-slate-400">
+                              New
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <Button

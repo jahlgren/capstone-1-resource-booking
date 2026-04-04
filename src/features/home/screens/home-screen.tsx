@@ -147,8 +147,9 @@ export default function HomeScreen({ user }: HomeProps) {
                                 </span>
                             </h2>
                             <p className="text-slate-500 font-medium">
-                                Check out the latest resources added to
-                                OrderEase.
+                                Check out the latest resources added to{" "}
+                                <span className="text-gb-blue font-extrabold tracking-wider">Order</span>
+                                <span className="text-gb-green font-extrabold tracking-wider">Ease</span>.
                             </p>
                         </div>
                         <Link

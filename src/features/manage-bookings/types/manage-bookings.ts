@@ -8,6 +8,8 @@ export type ManageBookingRequest = {
     startTime: string | Date;
     endTime: string | Date;
     createdAt: string | Date;
+    resourceId: string;
+    renterId: string;
     resourceName: string;
     resourceImage: string | null;
     price: number;

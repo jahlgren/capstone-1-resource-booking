@@ -15,5 +15,9 @@ export async function createResource(input: CreateResourceServerInput) {
         category: input.category,
     }).returning();
     if (!data.length) throw new Error("insert-failed");
-    return data[0];
+    return {
+        ...data[0],
+        avgRating: null,
+        totalReviews: 0,
+    };
 }

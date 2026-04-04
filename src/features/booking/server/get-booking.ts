@@ -18,6 +18,8 @@ export async function getIncomingBookings(ownerId: string) {
             startTime: booking.startTime,
             endTime: booking.endTime,
             createdAt: booking.createdAt,
+            resourceId: booking.resourceId,
+            renterId: booking.userId,
             resourceName: resource.name,
             resourceImage: resource.image,
             price: resource.price,

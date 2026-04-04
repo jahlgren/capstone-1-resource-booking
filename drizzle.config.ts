@@ -12,6 +12,8 @@ export default defineConfig({
     "./src/features/auth/models/verification.ts",
     /* RESOURCE MODELS */
     "./src/features/resource/model/resource.ts",
+    /* RATING MODELS */
+    "./src/features/rating/model/rating.ts",
     /* BOOKING MODELS */
     "./src/features/booking/model/booking.ts",
     /* FAVORITES MODELS */

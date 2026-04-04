@@ -1,5 +1,5 @@
 import { createResource } from "@/features/resource/server/create-resource";
-import { getPaginatedResources, getResources } from "@/features/resource/server/get-resources";
+import { getPaginatedResources } from "@/features/resource/server/get-resources";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { createId } from "@paralleldrive/cuid2";
@@ -30,14 +30,6 @@ export async function GET(req: Request) {
             { status: 500 }
         );
     }
-
-    // const resources = await getResources();
-    // return new Response(JSON.stringify(resources), {
-    //     status: 200,
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     }
-    // });
 }
 
 export async function POST(req: Request) {

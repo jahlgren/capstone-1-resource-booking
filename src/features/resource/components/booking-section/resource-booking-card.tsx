@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "@/shared/components/ui/card";
-import { Resource, ResourceBookingCardProps } from "../../types/resource";
+import { ResourceBookingCardProps } from "../../types/resource";
 import BookingPriceSummary from "./booking-price-summary";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -14,6 +14,7 @@ import useBookingQuery from "@/features/booking/hooks/use-booking-query";
 import { Booking } from "@/features/booking/types/booking";
 import useCreateBookingMutation from "@/features/booking/hooks/use-booking-create-query";
 import BookingSubmitButton from "./booking-submit-button";
+import BookingCheckoutOverlay from "./booking-checkout-overlay";
 import { cn } from "@/shared/lib/utils";
 import BookingPickerManager from "./booking-picker-manager";
 import { useRouter } from "next/navigation";
@@ -21,13 +22,15 @@ import useBookingUpdateQuery from "@/features/booking/hooks/use-booking-update-q
 import toast from "react-hot-toast";
 
 export default function ResourceBookingCard(
-    { resource, expanded, initialDate, mode = "create", bookingId }: ResourceBookingCardProps
+    { resource, expanded, initialDate, mode = "create", bookingId }:
+        ResourceBookingCardProps,
 ) {
     const router = useRouter();
     const { data: bookings } = useBookingQuery();
     const { mutate: createMutate, isPending } = useCreateBookingMutation();
     const { mutate: updateMutate } = useBookingUpdateQuery();
     const [date, setDate] = useState<DateRange | undefined>(initialDate);
+    const [checkoutOpen, setCheckoutOpen] = useState(false);
 
     const bookingDuration = (() => {
         if (!date?.from || !date?.to) return 0;
@@ -61,11 +64,11 @@ export default function ResourceBookingCard(
         bookings?.filter((b: Booking) =>
             b.resourceId === resource.id &&
             b.status !== "cancelled" &&
-            b.id !== bookingId // Add this to ignore the current booking during edit
+            b.id !== bookingId
         ) || [];
 
     const disabledCalendarDays = resource.priceUnit === "hour"
-        ? [] // Don't gray out days for hourly rentals!
+        ? []
         : activeBookings.map((b: Booking) => ({
             from: new Date(b.startTime),
             to: new Date(b.endTime),
@@ -89,10 +92,17 @@ export default function ResourceBookingCard(
     const isTimeOrderInvalid = resource.priceUnit === "hour" &&
         date?.from && date?.to && date.from >= date.to;
 
-    const onBook = () => {
+    const subtotal = datesSelected && bookingDuration > 0
+        ? resource.price * bookingDuration
+        : 0;
+    const checkoutTotal = subtotal + subtotal * 0.05;
+
+    const submitBooking = () => {
         if (!date?.from || !date?.to || isRangeInvalid || isTimeOrderInvalid) {
             return;
         }
+
+        setCheckoutOpen(false);
 
         const payload = {
             startTime: date.from.toISOString(),
@@ -100,31 +110,37 @@ export default function ResourceBookingCard(
         };
 
         if (mode === "edit" && bookingId) {
-            updateMutate({
-                id: bookingId,
-                ...payload,
-            }, {
-                onSuccess: () => {
-                    toast.success("Reservation updated successfully!");
-                    router.push("/bookings");
+            updateMutate(
+                {
+                    id: bookingId,
+                    ...payload,
                 },
-            });
+                {
+                    onSuccess: () => {
+                        toast.success("Reservation updated successfully!");
+                        router.push("/bookings");
+                    },
+                },
+            );
         } else {
-            createMutate({
-                resourceId: resource.id,
-                ...payload,
-            }, {
-                onSuccess: () => {
-                    setDate(undefined);
-                    router.push("/resources");
+            createMutate(
+                {
+                    resourceId: resource.id,
+                    ...payload,
                 },
-            });
+                {
+                    onSuccess: () => {
+                        setDate(undefined);
+                        router.push("/resources");
+                    },
+                },
+            );
         }
     };
 
     const handleReset = () => {
         setDate(initialDate);
-    }
+    };
 
     return (
         <Card
@@ -169,7 +185,7 @@ export default function ResourceBookingCard(
                 )}
 
                 <BookingSubmitButton
-                    onClick={onBook}
+                    onClick={() => setCheckoutOpen(true)}
                     isLoading={isPending}
                     mode={mode}
                     disabled={!datesSelected || bookingDuration <= 0 ||
@@ -178,6 +194,13 @@ export default function ResourceBookingCard(
                     handleReset={handleReset}
                 />
             </div>
+
+            <BookingCheckoutOverlay
+                isOpen={checkoutOpen}
+                amount={checkoutTotal}
+                onCancel={() => setCheckoutOpen(false)}
+                onConfirm={submitBooking}
+            />
         </Card>
     );
 }

@@ -20,6 +20,7 @@ import { Button } from "@/shared/components/ui/button";
 import CancelBooking from "./cancel-booking";
 import { ArrowUpDown } from "lucide-react";
 import ModifyBooking from "./modify-booking";
+import RateResource from "./RateResource";
 
 export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
     {
@@ -200,6 +201,10 @@ export const createColumns = (resources: Resource[]): ColumnDef<Booking>[] => [
                         <DropdownMenuLabel className="px-3 py-2 text-slate-500 uppercase text-[10px] tracking-widset font-bold">
                             Actions
                         </DropdownMenuLabel>
+                        <RateResource
+                            resourceId={booking.resourceId}
+                            userId={booking.userId}
+                        />
                         {isNotAllowed
                             ? (
                                 <DropdownMenuItem disabled>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 
 import { Resource } from "@/features/resource/types/resource";
 import { Card, CardFooter, CardHeader } from "@/shared/components/ui/card";
@@ -10,6 +10,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import DeleteResource from "./delete-resource";
 import ModifyResource from "./modify-resource";
+import { cn } from "@/shared/lib/utils";
 
 export default function ListingCard({ res }: { res: Resource }) {
     return (
@@ -30,9 +31,46 @@ export default function ListingCard({ res }: { res: Resource }) {
             </div>
 
             <CardHeader className="space-y-2 border-b border-slate-300">
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-gb-blue transition-colors leading-tight">
-                    {res.name}
-                </h3>
+                <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-gb-blue transition-colors leading-tight">
+                        {res.name}
+                    </h3>
+                    
+                    <div
+                        className="mt-1.5 flex items-center gap-1.5"
+                        aria-label={res.avgRating
+                            ? `Rated ${
+                                Number(res.avgRating).toFixed(1)
+                            } out of 5, ${res.totalReviews} reviews`
+                            : "No reviews yet"}
+                    >
+                        <Star
+                            className={cn(
+                                "size-3.5 shrink-0",
+                                res.avgRating
+                                    ? "fill-amber-400 text-amber-400"
+                                    : "fill-slate-200/80 text-slate-300",
+                            )}
+                            strokeWidth={res.avgRating ? 0 : 1.5}
+                        />
+                        {res.avgRating
+                            ? (
+                                <>
+                                    <span className="text-sm font-bold tabular-nums text-slate-900">
+                                        {Number(res.avgRating).toFixed(1)}
+                                    </span>
+                                    <span className="text-xs font-medium text-slate-500">
+                                        ({res.totalReviews})
+                                    </span>
+                                </>
+                            )
+                            : (
+                                <span className="text-xs font-semibold text-slate-400">
+                                    New
+                                </span>
+                            )}
+                    </div>
+                </div>
                 <p className="text-sm text-slate-500 font-medium line-clamp-2 leading-relaxed">
                     {res.description}
                 </p>
@@ -40,9 +78,11 @@ export default function ListingCard({ res }: { res: Resource }) {
 
             <CardFooter className="flex items-center justify-between">
                 <div className="flex flex-col">
-                    {/* <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                    {
+                        /* <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
                         Daily Rate
-                    </span> */}
+                    </span> */
+                    }
                     <div className="flex items-baseline gap-0.5">
                         <span className="text-xs font-bold text-slate-900">
                             $
@@ -57,7 +97,7 @@ export default function ListingCard({ res }: { res: Resource }) {
                 </div>
 
                 <div className="flex gap-2.5">
-                    <ModifyResource res={res}/>
+                    <ModifyResource res={res} />
 
                     <DeleteResource res={res} />
 

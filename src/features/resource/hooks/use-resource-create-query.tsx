@@ -39,10 +39,8 @@ export default function useCreateResourceMutation() {
             toast.error(
                 (
                     <div>
-                        <strong className="font-medium">
-                            Företagsskapandet misslyckades
-                        </strong>
-                        <p>{err.message}</p>
+                        <strong className="font-medium">Resource creation failed</strong>
+                        <p className="text-sm">{err.message}</p>
                     </div>
                 ),
                 {

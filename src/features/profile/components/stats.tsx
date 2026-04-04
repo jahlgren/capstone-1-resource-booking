@@ -3,10 +3,30 @@ import { Booking } from "@/features/booking/types/booking";
 import { Resource } from "@/features/resource/types/resource";
 import { Card } from "@/shared/components/ui/card";
 import { CalendarCheck, Package, Star } from "lucide-react";
+import type { HostListingRatingStats } from "../hooks/use-host-listing-rating-stats";
 
-export default function Stats({ resources, bookings }: { resources: Resource[], bookings: Booking[] }) {
+export default function Stats(
+    { resources, bookings, hostRating, hostRatingPending }: {
+        resources: Resource[];
+        bookings: Booking[];
+        hostRating?: HostListingRatingStats;
+        hostRatingPending?: boolean;
+    },
+) {
     const listingsCount = resources?.length.toString();
     const bookingsCount = bookings?.length.toString();
+
+    const trustDisplay = (() => {
+        if (hostRatingPending) return "…";
+        if (
+            !hostRating ||
+            hostRating.totalReviews < 1 ||
+            hostRating.avgRating == null
+        ) {
+            return "New";
+        }
+        return Number(hostRating.avgRating).toFixed(1);
+    })();
 
     const stats = [
         {
@@ -25,7 +45,13 @@ export default function Stats({ resources, bookings }: { resources: Resource[], 
         },
         {
             label: "Trust Rating",
-            value: "4.9",
+            value: trustDisplay,
+            sublabel:
+                hostRating && hostRating.totalReviews > 0
+                    ? `${hostRating.totalReviews} review${
+                        hostRating.totalReviews === 1 ? "" : "s"
+                    } on your listings`
+                    : undefined,
             icon: Star,
             color: "text-amber-500",
             bg: "bg-amber-50",
@@ -49,6 +75,13 @@ export default function Stats({ resources, bookings }: { resources: Resource[], 
                         <p className="text-4xl font-black text-slate-900">
                             {stat.value}
                         </p>
+                        {"sublabel" in stat && stat.sublabel
+                            ? (
+                                <p className="text-xs font-medium text-slate-400 mt-1 max-w-[14rem] leading-snug">
+                                    {stat.sublabel}
+                                </p>
+                            )
+                            : null}
                     </div>
                 </Card>
             ))}

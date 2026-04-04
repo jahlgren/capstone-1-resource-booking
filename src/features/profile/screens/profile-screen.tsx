@@ -9,12 +9,15 @@ import useBookingQuery from "@/features/booking/hooks/use-booking-query";
 import FinanceSection from "../components/finance-section";
 import SupportCard from "../components/support-card";
 import useManageBookingsQuery from "@/features/manage-bookings/hooks/use-manage-bookings-query";
+import useHostListingRatingStats from "../hooks/use-host-listing-rating-stats";
 
 export default function ProfileScreen({ user }: ProfileProps) {
     const { data: resources } = useResourcesQuery();
     const { data: bookings } = useBookingQuery();
 
     const { data: requests } = useManageBookingsQuery();
+    const { data: hostRating, isPending: hostRatingPending } =
+        useHostListingRatingStats();
 
     return (
         <div className="flex-1 min-h-screen bg-slate-50/50 py-12 px-6 md:px-10">
@@ -26,7 +29,12 @@ export default function ProfileScreen({ user }: ProfileProps) {
                         <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] px-2">
                             Overview
                         </h2>
-                        <Stats resources={resources} bookings={bookings} />
+                        <Stats
+                            resources={resources ?? []}
+                            bookings={bookings ?? []}
+                            hostRating={hostRating}
+                            hostRatingPending={hostRatingPending}
+                        />
                     </div>
 
                     <FinanceSection historyRequests={requests} />

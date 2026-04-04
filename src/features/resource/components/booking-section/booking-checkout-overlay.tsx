@@ -1,34 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, CreditCard, Loader2, Lock } from "lucide-react";
+import toast from "react-hot-toast";
 import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/shared/lib/utils";
+import { CheckoutProps } from "../../types/resource";
 
-interface CheckoutProps {
-    isOpen: boolean;
-    onConfirm: () => void;
-    onCancel: () => void;
-    amount: number;
-}
+export const CHECKOUT_PAYMENT_TOAST_ID = "checkout-payment";
 
 export default function BookingCheckoutOverlay({ isOpen, onConfirm, onCancel, amount }: CheckoutProps) {
     const [step, setStep] = useState<"details" | "processing" | "success">("details");
+    const paymentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const clearTimers = () => {
+        if (paymentTimerRef.current) clearTimeout(paymentTimerRef.current);
+        if (successTimerRef.current) clearTimeout(successTimerRef.current);
+        paymentTimerRef.current = null;
+        successTimerRef.current = null;
+    };
 
     useEffect(() => {
-        if (!isOpen) setStep("details");
+        if (!isOpen) {
+            setStep("details");
+            clearTimers();
+            toast.dismiss(CHECKOUT_PAYMENT_TOAST_ID);
+        }
     }, [isOpen]);
 
+    useEffect(() => () => clearTimers(), []);
+
     const handlePayment = () => {
+        toast.loading("Processing payment...", { id: CHECKOUT_PAYMENT_TOAST_ID });
         setStep("processing");
-        // Simulate network delay for payment authorization
-        setTimeout(() => {
+        clearTimers();
+        paymentTimerRef.current = setTimeout(() => {
+            toast.success("Payment authorized successfully!", {
+                id: CHECKOUT_PAYMENT_TOAST_ID,
+                duration: 2000,
+            });
             setStep("success");
-            // Wait a bit on success screen before final redirect/mutate
-            setTimeout(() => {
+            successTimerRef.current = setTimeout(() => {
+                toast.dismiss(CHECKOUT_PAYMENT_TOAST_ID);
                 onConfirm();
             }, 1500);
         }, 2500);
+    };
+
+    const handleCancel = () => {
+        clearTimers();
+        toast.dismiss(CHECKOUT_PAYMENT_TOAST_ID);
+        onCancel();
     };
 
     if (!isOpen) return null;
@@ -68,7 +90,7 @@ export default function BookingCheckoutOverlay({ isOpen, onConfirm, onCancel, am
                             >
                                 Pay & Confirm Booking
                             </Button>
-                            <Button variant="ghost" onClick={onCancel} className="text-slate-400 font-bold hover:bg-transparent">
+                            <Button variant="ghost" onClick={handleCancel} className="text-slate-400 font-bold hover:bg-transparent">
                                 Cancel
                             </Button>
                         </div>

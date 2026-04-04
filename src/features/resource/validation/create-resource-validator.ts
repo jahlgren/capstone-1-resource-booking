@@ -13,10 +13,8 @@ export const createResourceSchema = z.object({
 
 export type CreateResourceInput = z.infer<typeof createResourceSchema>;
 
-/** Server/API input - Image is URL string, not File */
 export type CreateResourceServerInput = Omit<CreateResourceInput, "Image"> & {
     Image?: string;
 };
 
-// Keep typo alias for backward compatibility during migration
 export const createRoesourceSchema = createResourceSchema;

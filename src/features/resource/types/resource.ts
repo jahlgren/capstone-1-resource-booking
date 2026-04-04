@@ -13,6 +13,8 @@ export type Resource = {
     category: category;
     createdAt: Date;
     updatedAt: Date;
+    avgRating: string | null;
+    totalReviews: number;
 }
 
 type category = "Apartments & Spaces" | "Vehicles & Transport" | "Tools & Equipment" | "Office & Tech";
@@ -91,4 +93,11 @@ export type LoadMoreButtonProps = {
     isFetchingNextPage: boolean;
     fetchNextPage: () => void;
     totalItems: number;
+}
+
+export type CheckoutProps = {
+    isOpen: boolean;
+    onConfirm: () => void;
+    onCancel: () => void;
+    amount: number;
 }
