@@ -5,6 +5,7 @@ import ResourceDetails from "../components/resource-details";
 import ResourceImage from "../components/resource-image";
 import { Resource } from "../types/resource";
 import ResourceBookingCard from "../components/booking-section/resource-booking-card";
+import ResourceReviewsSection from "../components/resource-reviews-section";
 import { cn } from "@/shared/lib/utils";
 import { useEffect, useRef } from "react";
 
@@ -56,6 +57,8 @@ export default function ResourceDetailsScreen(
                                 alt={resource.name}
                             />
                         </div>
+
+                        <ResourceReviewsSection resourceId={resource.id} />
                     </div>
 
                     {/* RIGHT SIDE: Action Zone */}
